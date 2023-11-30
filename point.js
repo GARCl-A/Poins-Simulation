@@ -30,10 +30,9 @@ export class Point {
             this.move();
             this.checkCollision(points);
             this.drawView();
+            this.drawText();
+            this.drawSelf();
         }
-        // Visual updates
-        this.drawSelf();
-        this.drawText();
     }
 
     move(){
@@ -140,13 +139,13 @@ export class Point {
         
         // Aplica uma cor sobre a imagem sem substituir completamente a cor original
         this.ctx.globalCompositeOperation = 'color'; // Define a operação de composição como 'color blending'
-        this.ctx.fillStyle = !this.stopped ? TeamColors[this.team]['mask'] : 'rgba(0, 0, 0, 1)'; // Cor da máscara
+        this.ctx.fillStyle =TeamColors[this.team]['mask']; // Cor da máscara
         this.ctx.globalAlpha = 0.1; // Ajusta o valor alpha para controlar a transparência da cor (variando de 0 a 1)
         this.ctx.beginPath();
         this.ctx.arc(0, 0, halfSize, 0, Math.PI * 2); // Desenha um círculo
         this.ctx.closePath();
         this.ctx.fill();
-        
+
         // Restaura o estado anterior do contexto
         this.ctx.globalCompositeOperation = 'source-over'; // Retorna à operação de composição padrão
         this.ctx.globalAlpha = 1; // Retorna ao valor alpha padrão
