@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Simulação de Pontos Móveis</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+    <div id="configPanel" class="config-panel">
+        <h2>Configurações</h2>
+        <label for="numPoints">Número de Pontos:</label>
+        <input type="number" id="numPoints" value="10"><br><br>
+
+        <label for="pointSize">Tamanho dos Pontos: <span id="pointSizeValue">25</span></label>
+        <input type="range" id="pointSize" min="10" max="150" value="50"><br><br>
+
+        <label for="speed">Velocidade: <span id="speedValue">1.0</span></label>
+        <input type="range" id="speed" min="0.1" max="2" step="0.1" value="1"><br><br>
+
+        <label for="viewDistance">Alcance de Visão: <span id="viewDistanceValue">150</span></label>
+        <input type="range" id="viewDistance" min="50" max="300" value="150"><br><br>
+
+        <button class ="configScreenButton" onclick="startSimulation()">Iniciar Simulação</button>
+    </div>
+
+    <div id="simulationContainer" style="display: none;">
+        <div id="aliveCounts" class="alive-counts">
+            <div id="team1" class="team">
+                <span id="team1Count"></span>
+            </div>
+            <div id="team2" class="team">
+                <span id="team2Count"></span>
+            </div>
+        </div>
+        <canvas id="myCanvas"></canvas>
+        <div id="overlay" class="overlay" style="display: none;">
+            <div id="resultText"></div>
+            <button id="restartButton">Restart</button>
+            <button id="backToConfigButton">Voltar para Configurações</button>
+        </div>
+    </div>
+    <script type="module" src="script.js"></script>
+    <script src="sliders.js"></script>
+</body>
+</html>

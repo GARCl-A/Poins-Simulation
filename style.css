@@ -1,0 +1,110 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Overlay */
+.overlay {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    border: 2px solid black;
+}
+
+#resultText {
+    color: black;
+    font-weight: bold;
+}
+
+/* Config Panel */
+.config-panel {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 300px; /* Adicionei um valor de largura para melhor visualização */
+}
+
+h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+input[type="number"],
+input[type="range"],
+button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #3498db;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+/* Alive Counts */
+.alive-counts {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    top: 1%;
+    left: 1%;
+}
+
+.team {
+    margin: 10px;
+    padding: 5px 10px;
+    border: 2px solid black;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
+#team1 {
+    background-color: red;
+    color: white;
+}
+
+#team2 {
+    background-color: blue;
+    color: white;
+}
+
+#restartButton,
+#backToConfigButton{
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+#restartButton:hover,
+#backToConfigButton:hover{
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
