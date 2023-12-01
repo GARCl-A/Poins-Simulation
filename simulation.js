@@ -50,7 +50,10 @@ export class PointSimulation {
                 x: Math.random() * this.canvas.width,
                 y: Math.random() * this.canvas.height,
             }
-            this.formations.getBlockFormation(team, position)
+
+            const formationKey = Math.ceil(Object.keys(this.formations.formationsMap).length * Math.random());
+            const formationId = this.formations.formationsMap[formationKey];
+            this.formations.getFormation(formationId, team);
         }
         this.update()
     }
@@ -121,7 +124,7 @@ export class PointSimulation {
     }
     
     getWinningTeam() {
-        const livingTeams = this.teams.filter(team => team.alive === false);
+        const livingTeams = this.teams.filter(team => team.alive === true);
     
         if (livingTeams.length === 1) {
             return livingTeams[0];

@@ -1,15 +1,31 @@
 export class Formations {
     constructor(canvasId){
         this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');    
+        this.ctx = this.canvas.getContext('2d');
+        this.formationsMap = {
+            1: 'none',
+            2: 'block',
+            3: 'triangle',
+        }    
     }
 
-    getBlockFormation(team, initialPosition) {
+    getFormation(formationId, team){
+        if(formationId === 'none'){
+            return;
+        } else if(formationId === 'block'){
+            this.getBlockFormation(team);
+        } else if(formationId === 'triangle'){
+            this.getTriangleFormation(team);
+        }
+    }
+
+    getBlockFormation(team) {
         const formationSize = team.getTeamSize();
         const characterSize = team.points[0].size;
         const gridSpacing = characterSize * 1.1; // Espaçamento do grid entre os personagens
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
+        const initialPosition = this.findValidInitialPosition(team)
     
         // Calcula o tamanho do bloco da formação na largura e altura
         const blockWidth = Math.sqrt(formationSize) * gridSpacing;
@@ -36,9 +52,7 @@ export class Formations {
     
             // Define o ângulo para todos os pontos na formação
             point.angle = angle;
-            point.dx = Math.cos(angle) * point.speed;
-            point.dy = Math.sin(angle) * point.speed;
-    
+
             col++; // Avança para a próxima coluna
     
             // Verifica se mudou de linha no grid
@@ -47,5 +61,83 @@ export class Formations {
                 row++;
             }
         });
+    }
+
+    getTriangleFormation(team) {
+        const formationSize = team.getTeamSize();
+        const characterSize = team.points[0].size;
+        const gridSpacing = characterSize * 1.1; // Espaçamento do grid entre os personagens
+        const canvasWidth = this.canvas.width;
+        const canvasHeight = this.canvas.height;
+        const initialPosition = this.findValidInitialPosition(team)
+    
+        // Calcula o número de linhas necessárias para a formação triangular
+        const numRows = Math.ceil(Math.sqrt(formationSize * 2));
+    
+        // Verifica se a posição inicial e o bloco inteiro cabem dentro dos limites do canvas
+        if (
+            initialPosition.x < 0 ||
+            initialPosition.x + gridSpacing * (numRows - 1) > canvasWidth ||
+            initialPosition.y < 0 ||
+            initialPosition.y + gridSpacing * (numRows - 1) > canvasHeight
+        ) {
+            console.error("A posição inicial ou a formação estão fora dos limites do canvas.");
+            return;
+        }
+    
+        let count = 0;
+        let angle = Math.random() * Math.PI * 2;
+    
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j <= i; j++) {
+                if (count >= formationSize) {
+                    return;
+                }
+    
+                const offsetX = j * gridSpacing;
+                const offsetY = i * gridSpacing;
+    
+                const xPos = initialPosition.x + offsetX;
+                const yPos = initialPosition.y + offsetY;
+    
+                if (xPos >= 0 && xPos < canvasWidth && yPos >= 0 && yPos < canvasHeight) {
+                    team.points[count].x = xPos;
+                    team.points[count].y = yPos;
+                    team.points[count].angle = angle;
+                    count++;
+                }
+            }
+        }
+    }
+    
+    findValidInitialPosition(team, maxAttempts = 100) {
+        const formationSize = team.getTeamSize();
+        const characterSize = team.points[0].size;
+        const gridSpacing = characterSize * 1.1; // Espaçamento do grid entre os personagens
+        const canvasWidth = this.canvas.width;
+        const canvasHeight = this.canvas.height;
+
+        let attempts = 0;
+
+        while (attempts < maxAttempts) {
+            const initialPosition = {
+                x: Math.random() * (canvasWidth - gridSpacing * Math.sqrt(formationSize)),
+                y: Math.random() * (canvasHeight - gridSpacing * Math.ceil(formationSize / Math.sqrt(formationSize)))
+            };
+
+            if (
+                initialPosition.x >= 0 &&
+                initialPosition.x + gridSpacing * Math.sqrt(formationSize) <= canvasWidth &&
+                initialPosition.y >= 0 &&
+                initialPosition.y + gridSpacing * Math.ceil(formationSize / Math.sqrt(formationSize)) <= canvasHeight
+            ) {
+                return initialPosition;
+            }
+
+            attempts++;
+        }
+
+        console.error('Não foi possível encontrar uma posição inicial adequada.');
+        return {x: this.canvas.width/2, y: this.canvas.height/2};
     }
 }
