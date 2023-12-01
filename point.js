@@ -36,39 +36,52 @@ export class Point {
         }
     }
 
-    move(){
+    move() {
         const halfSize = this.size / 2;
     
         this.x += this.dx * this.speed;
         this.y += this.dy * this.speed;
-        
-        // Verifica colisões com as paredes
+    
+        this.checkWallCollision(halfSize);
+        this.speed += 0.01;
+    }
+    
+    checkWallCollision(halfSize) {
         if (this.x - halfSize < 0) {
-            this.x = halfSize;
-            this.dx *= -1;
-            this.speed = 0.1;
-            this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
+            this.handleWallCollision('x', halfSize);
         }
         if (this.x + halfSize > this.canvas.width) {
-            this.x = this.canvas.width - halfSize;
-            this.dx *= -1;
-            this.speed = 0.1;
-            this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
+            this.handleWallCollision('x', this.canvas.width - halfSize);
         }
         if (this.y - halfSize < 0) {
-            this.y = halfSize;
-            this.dy *= -1;
-            this.speed = 0.1;
-            this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
+            this.handleWallCollision('y', halfSize);
         }
         if (this.y + halfSize > this.canvas.height) {
-            this.y = this.canvas.height - halfSize;
-            this.dy *= -1;
-            this.speed = 0.1;
-            this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
+            this.handleWallCollision('y', this.canvas.height - halfSize);
         }
-
-        this.speed += 0.01;
+    }
+    
+    handleWallCollision(axis, boundary) {
+        this.resetPositionAfterCollision(axis, boundary);
+        this.reverseDirectionAfterCollision(axis);
+    }
+    
+    resetPositionAfterCollision(axis, boundary) {
+        if (axis === 'x') {
+            this.x = boundary;
+        } else {
+            this.y = boundary;
+        }
+    }
+    
+    reverseDirectionAfterCollision(axis) {
+        if (axis === 'x') {
+            this.dx *= -1;
+        } else {
+            this.dy *= -1;
+        }
+        this.speed = 0.1;
+        this.angle = Math.atan2(this.dy, this.dx);
     }
     
 

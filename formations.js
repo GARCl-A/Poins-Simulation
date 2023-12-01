@@ -9,29 +9,31 @@ export class Formations {
         }    
     }
 
-    getFormation(formationId, team){
-        if(formationId === 'none'){
+    getFormation(formationId, team) {
+        if (formationId === 'none') {
             return;
-        } else if(formationId === 'block'){
-            this.getBlockFormation(team);
-        } else if(formationId === 'triangle'){
-            this.getTriangleFormation(team);
+        } else if (formationId === 'block') {
+            this.generateFormation(team, this.generateBlockFormation.bind(this));
+        } else if (formationId === 'triangle') {
+            this.generateFormation(team, this.generateTriangleFormation.bind(this));
         }
     }
 
-    getBlockFormation(team) {
+    generateFormation(team, formationFunction) {
         const formationSize = team.getTeamSize();
         const characterSize = team.points[0].size;
         const gridSpacing = characterSize * 1.1; // Espaçamento do grid entre os personagens
         const canvasWidth = this.canvas.width;
         const canvasHeight = this.canvas.height;
-        const initialPosition = this.findValidInitialPosition(team)
-    
-        // Calcula o tamanho do bloco da formação na largura e altura
+        const initialPosition = this.findValidInitialPosition(team);
+
+        formationFunction(team, formationSize, gridSpacing, canvasWidth, canvasHeight, initialPosition);
+    }
+
+    generateBlockFormation(team, formationSize, gridSpacing, canvasWidth, canvasHeight, initialPosition) {
         const blockWidth = Math.sqrt(formationSize) * gridSpacing;
         const blockHeight = Math.ceil(formationSize / Math.sqrt(formationSize)) * gridSpacing;
-    
-        // Verifica se a posição inicial e o bloco inteiro cabem dentro dos limites do canvas
+
         if (initialPosition.x < 0 || initialPosition.x + blockWidth > canvasWidth ||
             initialPosition.y < 0 || initialPosition.y + blockHeight > canvasHeight) {
             console.error('A posição inicial ou a formação estão fora dos limites do canvas.');
@@ -65,18 +67,9 @@ export class Formations {
         });
     }
 
-    getTriangleFormation(team) {
-        const formationSize = team.getTeamSize();
-        const characterSize = team.points[0].size;
-        const gridSpacing = characterSize * 1.1; // Espaçamento do grid entre os personagens
-        const canvasWidth = this.canvas.width;
-        const canvasHeight = this.canvas.height;
-        const initialPosition = this.findValidInitialPosition(team)
-    
-        // Calcula o número de linhas necessárias para a formação triangular
+    generateTriangleFormation(team, formationSize, gridSpacing, canvasWidth, canvasHeight, initialPosition) {
         const numRows = Math.ceil(Math.sqrt(formationSize * 2));
-    
-        // Verifica se a posição inicial e o bloco inteiro cabem dentro dos limites do canvas
+
         if (
             initialPosition.x < 0 ||
             initialPosition.x + gridSpacing * (numRows - 1) > canvasWidth ||

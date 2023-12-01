@@ -85,7 +85,7 @@ export class PointSimulation {
             }
         }
     
-        if (aliveTeamsCount === 1) {
+        if (aliveTeamsCount <= 1) {
             this.state = 'ended';
             return true;
         }
@@ -94,8 +94,7 @@ export class PointSimulation {
     }
 
     drawChessboardBackground() {
-        const gridSize = 10
-
+        const gridSize = 10;
         for (let x = 0; x < this.canvas.width; x += gridSize) {
             this.ctx.beginPath();
             this.ctx.moveTo(x, 0);
