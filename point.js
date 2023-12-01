@@ -12,6 +12,7 @@ export class Point {
         this.size = size;
         this.team = team;
         this.hp = 3;
+        this.wallsCD = 0;
 
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
@@ -27,9 +28,9 @@ export class Point {
 
     update(points) {
         if (!this.stopped) {
-            this.getClosestPoint(points);
             this.move();
             this.checkCollision(points);
+            this.getClosestPoint(points);
             this.drawView();
             this.drawInfo();
             this.drawSelf();
@@ -38,12 +39,56 @@ export class Point {
 
     move() {
         const halfSize = this.size / 2;
+        const coneAngle = 60 * (Math.PI / 180); // Ângulo do cone em radianos (120 graus convertidos para radianos)
     
+        const futureX = this.x + this.dx * this.speed;
+        const futureY = this.y + this.dy * this.speed;
+
+        const collideView = Math.max(this.viewDistance/2, halfSize)
+    
+        const collidesWithWall =
+            futureX - collideView < 0 ||
+            futureX + collideView > this.canvas.width ||
+            futureY - collideView < 0 ||
+            futureY + collideView > this.canvas.height;
+
+        const collidesWithLeftWall = futureX - collideView < 0;
+        const collidesWithRightWall = futureX + collideView > this.canvas.width;
+        const collidesWithTopWall = futureY - collideView < 0;
+        const collidesWithBottomWall = futureY + collideView > this.canvas.height;
+
+        if (this.wallsCD <= 0 && collidesWithWall && Math.abs(Math.atan2(futureY - this.y, futureX - this.x) - this.angle) < coneAngle) {
+            this.wallsCD = 50;
+    
+            // Se houver colisão iminente, ajusta a direção de acordo com a parede
+            if (collidesWithLeftWall) {
+                this.dx = Math.abs(this.dx); // Torna a direção X positiva para afastar da parede
+                this.angle = Math.atan2(this.dy, this.dx);
+            } else if (collidesWithRightWall) {
+                this.dx = -Math.abs(this.dx); // Torna a direção X negativa para afastar da parede
+                this.angle = Math.atan2(this.dy, this.dx);
+            }
+    
+            if (collidesWithTopWall) {
+                this.dy = Math.abs(this.dy); // Torna a direção Y positiva para afastar da parede
+                this.angle = Math.atan2(this.dy, this.dx);
+            } else if (collidesWithBottomWall) {
+                this.dy = -Math.abs(this.dy); // Torna a direção Y negativa para afastar da parede
+                this.angle = Math.atan2(this.dy, this.dx);
+            }
+    
+            // Reduz a velocidade e ajusta a direção
+            this.speed *= 0.7;
+        } else {
+            this.wallsCD -= 1;
+        }
+
         this.x += this.dx * this.speed;
         this.y += this.dy * this.speed;
     
+        // Verifica a colisão com as paredes
         this.checkWallCollision(halfSize);
-        this.speed += 0.01;
+        this.speed += 0.01; // Aumenta a velocidade gradualmente
     }
     
     checkWallCollision(halfSize) {
