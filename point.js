@@ -31,7 +31,7 @@ export class Point {
             this.move();
             this.checkCollision(points);
             this.drawView();
-            this.drawText();
+            this.drawInfo();
             this.drawSelf();
         }
     }
@@ -147,33 +147,6 @@ export class Point {
         this.ctx.globalAlpha = 1; // Retorna ao valor alpha padrão
         this.ctx.restore();
     }
-    
-    drawText(){
-        const halfSize = this.size / 2;
-
-        const originalLineWidth = this.ctx.lineWidth;
-        this.ctx.font = "16px Arial";
-        this.ctx.textAlign = "center";
-        this.ctx.textBaseline = "middle";
-        this.ctx.fillStyle = "white"; // Definindo a cor do texto como branco
-        this.ctx.strokeStyle = "black"; // Definindo a cor do contorno como preto
-        this.ctx.lineWidth = 3; // Espessura do contorno
-        
-        // Posicionando o texto no centro do cavaleiro
-        this.ctx.strokeText(`${this.name}`, this.x, this.y - this.size/2);
-        this.ctx.fillText(`${this.name}`, this.x, this.y - this.size/2);
-        this.ctx.lineWidth = originalLineWidth;
-
-        // Exibe a velocidade na parte de trás do cavaleiro
-        this.ctx.font = "14px Arial";
-        this.ctx.fillStyle = "black";
-        this.ctx.fillText(`${this.speed.toFixed(2)}`, this.x - 20, this.y + 20);
-
-        // Exibe o hp na parte de trás do cavaleiro
-        this.ctx.font = "14px Arial";
-        this.ctx.fillStyle = "black";
-        this.ctx.fillText(`${this.hp.toFixed(2)}`, this.x - 20, this.y + 40);
-    }
 
     collide(otherPoint){
         this.strike(otherPoint);
@@ -190,6 +163,32 @@ export class Point {
         if(this.hp <= 0){
             this.stopped = true;
         }
-        console.log(`HP: ${this.hp} DAMAGE: ${otherPoint.speed}`)
+    }
+
+    drawHealthBar(x, y, width, height, health, maxHealth, color) {
+        const barWidth = (width * health) / maxHealth;
+    
+        this.ctx.fillStyle = color;
+        this.ctx.fillRect(x, y, barWidth, height);
+    
+        this.ctx.strokeStyle = "black";
+        this.ctx.strokeRect(x, y, width, height);
+    }
+    
+    drawSpeedIcon(x, y, speed) {
+        this.ctx.font = "bold 14px Arial";
+        this.ctx.fillStyle = "black";
+        this.ctx.fillText(`>> ${speed.toFixed(2)}`, x, y);
+    }
+    
+    drawInfo() {
+        const x = this.x - this.size / 2;
+        const y = this.y - this.size / 2 - 20; // Posição acima do personagem
+
+        // Exibir barra de HP
+        this.drawHealthBar(x, y, this.size, 5, this.hp, 3, "green");
+
+        // Exibir ícone de velocidade
+        this.drawSpeedIcon(x, y - 7, this.speed);
     }
 }
