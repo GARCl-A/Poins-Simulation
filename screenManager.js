@@ -79,5 +79,6 @@ export class ScreenManager {
     goToConfig() {
         document.getElementById('simulationContainer').style.display = 'none';
         document.getElementById('configPanel').style.display = 'block';
+        this.simulation.reset();
     }
 }
