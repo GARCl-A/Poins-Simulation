@@ -52,6 +52,8 @@ export class Formations {
     
             // Define o ângulo para todos os pontos na formação
             point.angle = angle;
+            point.dx = Math.cos(angle);
+            point.dy = Math.sin(angle);
 
             col++; // Avança para a próxima coluna
     
@@ -104,6 +106,8 @@ export class Formations {
                     team.points[count].x = xPos;
                     team.points[count].y = yPos;
                     team.points[count].angle = angle;
+                    team.points[count].dx = Math.cos(angle);
+                    team.points[count].dy = Math.sin(angle);
                     count++;
                 }
             }

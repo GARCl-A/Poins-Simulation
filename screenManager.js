@@ -59,7 +59,6 @@ export class ScreenManager {
     // Quando a simulação acabar, exiba o botão de reinício
     displayRestartButton() {
         const winnerTeam = this.simulation.getWinningTeam();
-        console.log(winnerTeam);
         if (winnerTeam.teamId !== 'Draw') {
             this.resultText.textContent = `Team ${winnerTeam.teamId} won!`;
             this.resultText.style.color = '#fff';

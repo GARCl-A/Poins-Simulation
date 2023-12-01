@@ -22,7 +22,7 @@ export class Point {
 
         this.angle = Math.atan2(this.dy, this.dx);
         this.characterImage = new Image();
-        this.characterImage.src = 'characterImage.png';
+        this.characterImage.src = 'character.png';
     }
 
     update(points) {
@@ -107,7 +107,6 @@ export class Point {
                 if (distance < closestDistance) {
                     closestDistance = distance;
                     closestPoint = point;
-                    this.speed += 0.01
                 }
             });
 
