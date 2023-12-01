@@ -59,14 +59,16 @@ export class ScreenManager {
     // Quando a simulação acabar, exiba o botão de reinício
     displayRestartButton() {
         const winnerTeam = this.simulation.getWinningTeam();
-        if (winnerTeam) {
+        if (winnerTeam.teamId !== 'Draw') {
             this.resultText.textContent = `Team ${winnerTeam.teamId} won!`;
             this.resultText.style.color = '#fff';
             this.overlay.style.display = 'block';
             this.overlay.style.backgroundColor = winnerTeam.color;
         } else {
-            // Lidar com a situação em que não há equipe vencedora
-            console.log('No winning team');
+            this.resultText.textContent = `DRAW!`;
+            this.resultText.style.color = '#fff';
+            this.overlay.style.display = 'block';
+            this.overlay.style.backgroundColor = 'black';
         }
     }
     

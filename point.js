@@ -11,6 +11,7 @@ export class Point {
         this.stopped = false;
         this.size = size;
         this.team = team;
+        this.hp = 3;
 
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
@@ -76,14 +77,7 @@ export class Point {
             if (otherPoint !== this && !otherPoint.stopped && otherPoint.team.teamId !== this.team.teamId) {
                 const distance = this.getDistance(otherPoint);
                 if (distance < this.size) {
-                    if (this.speed <= otherPoint.speed) {
-                        otherPoint.speed = 0.1;
-                        this.stop();
-                    } else {
-                        this.speed = 0.1;
-                        otherPoint.stop();
-                        //otherPoint.update();
-                    }
+                    this.collide(otherPoint);
                 }
             }
         });
@@ -174,11 +168,28 @@ export class Point {
         this.ctx.font = "14px Arial";
         this.ctx.fillStyle = "black";
         this.ctx.fillText(`${this.speed.toFixed(2)}`, this.x - 20, this.y + 20);
+
+        // Exibe o hp na parte de trás do cavaleiro
+        this.ctx.font = "14px Arial";
+        this.ctx.fillStyle = "black";
+        this.ctx.fillText(`${this.hp.toFixed(2)}`, this.x - 20, this.y + 40);
     }
 
-    stop(){
-        this.stopped = true;
-        this.dx = 0;
-        this.dy = 0;
-    }   
+    collide(otherPoint){
+        this.strike(otherPoint);
+        this.speed = 0.1;
+        otherPoint.speed = 0.1;
+    }  
+    
+    strike(otherPoint){
+        otherPoint.hp -= this.speed;
+        if(otherPoint.hp <= 0){
+            otherPoint.stopped = true;
+        }
+        this.hp -= otherPoint.speed * 0.5;
+        if(this.hp <= 0){
+            this.stopped = true;
+        }
+        console.log(`HP: ${this.hp} DAMAGE: ${otherPoint.speed}`)
+    }
 }

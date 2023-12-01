@@ -117,8 +117,8 @@ export class PointSimulation {
     
         if (livingTeams.length === 1) {
             return livingTeams[0];
-        } else {
-            return null;
+        } else if(livingTeams.length === 0){
+            return new Team('Draw');
         }
     }
 
