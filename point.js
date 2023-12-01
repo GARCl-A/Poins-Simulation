@@ -95,7 +95,7 @@ export class Point {
             !otherPoint.stopped &&
             this.team.teamId !== otherPoint.team.teamId &&
             this.getDistance(otherPoint) < this.viewDistance &&
-            Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle / 2
+            Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle
         );
       
         if (visiblePoints.length > 0) {
