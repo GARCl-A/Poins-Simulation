@@ -62,6 +62,8 @@ export class Point {
             this.dy *= -1;
             this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
         }
+
+        this.speed += 0.01;
     }
     
 
@@ -75,12 +77,12 @@ export class Point {
                 const distance = this.getDistance(otherPoint);
                 if (distance < this.size) {
                     if (this.speed <= otherPoint.speed) {
-                        otherPoint.speed += 0.005;
+                        otherPoint.speed = 0.1;
                         this.stop();
                     } else {
-                        this.speed += 0.005;
+                        this.speed = 0.1;
                         otherPoint.stop();
-                        otherPoint.update();
+                        //otherPoint.update();
                     }
                 }
             }
@@ -104,13 +106,13 @@ export class Point {
                 if (distance < closestDistance) {
                     closestDistance = distance;
                     closestPoint = point;
-                    this.speed += 0.005
+                    this.speed += 0.01
                 }
             });
 
             const angle = Math.atan2(closestPoint.y - this.y, closestPoint.x - this.x);
-            this.dx = Math.cos(angle) * this.speed;
-            this.dy = Math.sin(angle) * this.speed;
+            this.dx = Math.cos(angle);
+            this.dy = Math.sin(angle);
             this.angle = Math.atan2(this.dy, this.dx);
         }
     }
