@@ -1,11 +1,10 @@
 import { PointSimulation } from './simulation.js';
-import {TeamColors} from "./team.js"
 
 export class ScreenManager {
-    constructor(canvasId, numPoints, speed, viewDistance, pointSize) {
+    constructor(canvasId, teamNumber, teamSize, speed, viewDistance, pointSize) {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext('2d');
-        this.simulation = new PointSimulation(canvasId, numPoints, speed, viewDistance, pointSize);
+        this.simulation = new PointSimulation(canvasId, teamNumber, teamSize, speed, viewDistance, pointSize);
 
         this.backToConfigButton = document.getElementById('backToConfigButton');
         this.restartButton = document.getElementById('restartButton');
@@ -38,6 +37,7 @@ export class ScreenManager {
     }
 
     update() {
+        console.log(this.simulation.state)
         this.simulation.update();
         if(this.simulation.state == 'ended') {
             this.displayRestartButton();
@@ -60,14 +60,17 @@ export class ScreenManager {
     // Quando a simulação acabar, exiba o botão de reinício
     displayRestartButton() {
         const winnerTeam = this.simulation.getWinningTeam();
-        // Exibe o texto da vitória
-        this.resultText.textContent = `Team ${winnerTeam} won!`;
-        this.resultText.style.color = '#fff';
-        // Exibe a sobreposição (overlay)
-        this.overlay.style.display = 'block';
-        this.overlay.style.backgroundColor = TeamColors[winnerTeam]['color'];
+        if (winnerTeam) {
+            this.resultText.textContent = `Team ${winnerTeam.teamId} won!`;
+            this.resultText.style.color = '#fff';
+            this.overlay.style.display = 'block';
+            this.overlay.style.backgroundColor = winnerTeam.color;
+        } else {
+            // Lidar com a situação em que não há equipe vencedora
+            console.log('No winning team');
+        }
     }
-
+    
     hideRestartButton(){
         this.overlay.style.display = 'none';
     }

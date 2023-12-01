@@ -1,4 +1,4 @@
-import {TeamColors} from "./team.js"
+import { Team } from "./team.js"
 
 export class Point {
     constructor(canvas, simulation, speed, viewDistance, size, team, name) {
@@ -71,7 +71,7 @@ export class Point {
 
     checkCollision(points){
         points.forEach(otherPoint => {
-            if (otherPoint !== this && !otherPoint.stopped && otherPoint.team !== this.team) {
+            if (otherPoint !== this && !otherPoint.stopped && otherPoint.team.teamId !== this.team.teamId) {
                 const distance = this.getDistance(otherPoint);
                 if (distance < this.size) {
                     if (this.speed <= otherPoint.speed) {
@@ -92,7 +92,7 @@ export class Point {
             otherPoint !== this &&
             !otherPoint.stopped &&
             this.getDistance(otherPoint) < this.viewDistance &&
-            this.team !== otherPoint.team
+            this.team.teamId !== otherPoint.team.teamId
             );
       
         if (visiblePoints.length > 0) {
@@ -139,8 +139,8 @@ export class Point {
         
         // Aplica uma cor sobre a imagem sem substituir completamente a cor original
         this.ctx.globalCompositeOperation = 'color'; // Define a operação de composição como 'color blending'
-        this.ctx.fillStyle =TeamColors[this.team]['mask']; // Cor da máscara
-        this.ctx.globalAlpha = 0.1; // Ajusta o valor alpha para controlar a transparência da cor (variando de 0 a 1)
+        this.ctx.fillStyle = this.team.color; // Cor da máscara
+        this.ctx.globalAlpha = 0.2; // Ajusta o valor alpha para controlar a transparência da cor (variando de 0 a 1)
         this.ctx.beginPath();
         this.ctx.arc(0, 0, halfSize, 0, Math.PI * 2); // Desenha um círculo
         this.ctx.closePath();
@@ -176,7 +176,6 @@ export class Point {
 
     stop(){
         this.stopped = true;
-        this.simulation.stoppedCount[this.team] += 1;
         this.dx = 0;
         this.dy = 0;
     }   

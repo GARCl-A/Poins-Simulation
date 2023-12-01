@@ -1,19 +1,17 @@
 import { Point } from "./point.js";
+import { Team} from "./team.js"
 
 export class PointSimulation {
-    constructor(canvasId, numPoints, speed, viewDistance, size) {
+    constructor(canvasId, teamNumber, teamSize, speed, viewDistance, size) {
         this.canvas = document.getElementById(canvasId);
         this.ctx = this.canvas.getContext("2d");
-        this.numPoints = numPoints;
-        this.teamSize = numPoints/2;
         this.speed = speed;
         this.viewDistance = viewDistance;
         this.size = size;
+        this.teamNumber = teamNumber;
+        this.teamSize = teamSize;
+        this.teams = [];
         this.points = [];
-        this.stoppedCount = {
-            1: 0,
-            2: 0,
-        };
         this.state = 'created';
 
         this.init();
@@ -23,22 +21,38 @@ export class PointSimulation {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
         this.state = 'simulating';
-
-        for (let i = 0; i < this.numPoints; i++) {
-            let team = i % 2 === 0 ? 2 : 1;
-            const point = new Point(this.canvas, this, this.speed, this.viewDistance, this.size, team, i+1);
-            this.points.push(point);
+    
+        for (let j = 0; j < this.teamNumber; j++) { // Corrigindo o laço for
+            const team = new Team(j);
+            this.teams.push(team);
+    
+            // Criar elementos HTML para exibir os contadores de equipes
+            const teamCountElement = document.createElement('div');
+            teamCountElement.classList.add('team');
+            teamCountElement.id = `team${j + 1}`; // Usar j em vez de i
+            teamCountElement.innerHTML = `<span id="team${j + 1}Count"></span>`;
+            teamCountElement.style.backgroundColor = team.color;
+            teamCountElement.style.color = 'white';
+            
+            document.getElementById('aliveCounts').appendChild(teamCountElement);
+    
+            for (let i = 0; i < this.teamSize; i++) {
+                let pointName = `${j}-${i}`
+                const point = new Point(this.canvas, this, this.speed, this.viewDistance, this.size, team, pointName);
+                team.addPoint(point);
+                this.points.push(point);
+            }
         }
-
         this.update()
     }
+    
 
     update() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawChessboardBackground()
 
-        this.points.forEach(point => {
-            point.update(this.points);
+        this.teams.forEach(team => {
+            team.update(this.points);
         });
 
         this.displayAliveCounts(); // Mostra a quantidade de cavaleiros vivos de cada time
@@ -47,19 +61,24 @@ export class PointSimulation {
     }
 
     checkIfTeamWon() {
-        const stopThreshold = this.teamSize; // Defina o valor limite para determinar a vitória
-
-        // Verifica se alguma equipe atingiu o limite de parados
-        for (let team in this.stoppedCount) {
-            if (this.stoppedCount.hasOwnProperty(team)) {
-                if (this.stoppedCount[team] >= stopThreshold) {
-                    this.state = 'ended';
-                    return true
-                }
+        // Verifica se apenas uma equipe está viva
+        let aliveTeamsCount = 0;
+        let lastAliveTeam = null;
+    
+        for (let i = 0; i < this.teams.length; i++) {
+            const team = this.teams[i];
+            if (team.stoppedCount < team.getTeamSize()) {
+                aliveTeamsCount++;
+                lastAliveTeam = team;
             }
         }
-
-        return false
+    
+        if (aliveTeamsCount === 1) {
+            this.state = 'ended';
+            return true;
+        }
+    
+        return false;
     }
 
     drawChessboardBackground() {
@@ -83,24 +102,18 @@ export class PointSimulation {
     }
 
     displayAliveCounts() {
-        let aliveCounts = {
-            1: this.teamSize - this.stoppedCount[1],
-            2: this.teamSize - this.stoppedCount[2],
-        };
-    
-        document.getElementById('team1Count').textContent = aliveCounts[1];
-        document.getElementById('team2Count').textContent = aliveCounts[2];
+        this.teams.forEach((team, index) => {
+            const aliveCount = team.getTeamSize() - team.stoppedCount;
+            const teamCountElement = document.getElementById(`team${index + 1}Count`);
+            if (teamCountElement) {
+                teamCountElement.textContent = aliveCount;
+            }
+        });
     }
     
     getWinningTeam() {
-        let livingTeams = [];
-
-        for (let team in this.stoppedCount) {
-            if (this.stoppedCount.hasOwnProperty(team) && this.stoppedCount[team] < this.teamSize) {
-                livingTeams.push(team);
-            }
-        }
-
+        const livingTeams = this.teams.filter(team => team.stoppedCount < team.getTeamSize());
+    
         if (livingTeams.length === 1) {
             return livingTeams[0];
         } else {
@@ -110,8 +123,11 @@ export class PointSimulation {
 
     reset() {
         // Reinicialize aqui todos os parâmetros necessários para começar uma nova simulação
-        this.stoppedCount = { 1: 0, 2: 0 };
+        this.teams = [];
         this.points = [];
+        const aliveCountsElement = document.getElementById('aliveCounts');
+        aliveCountsElement.innerHTML = ''; // Remove todos os elementos filhos
+        this.state = 'created'
         this.init(); // Reinicia a simulação
     }
 }
