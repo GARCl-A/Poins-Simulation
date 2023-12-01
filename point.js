@@ -123,10 +123,17 @@ export class Point {
                 }
             });
 
-            const angle = Math.atan2(closestPoint.y - this.y, closestPoint.x - this.x);
-            this.dx = Math.cos(angle);
-            this.dy = Math.sin(angle);
-            this.angle = Math.atan2(this.dy, this.dx);
+            if (this.hp < 1 && closestPoint.speed > this.speed && closestPoint.hp > 1) { // Verifica se a vida do personagem está baixa e o ponto mais próximo não
+                const angleAway = Math.atan2(this.y - closestPoint.y, this.x - closestPoint.x);
+                this.dx = Math.cos(angleAway);
+                this.dy = Math.sin(angleAway);
+                this.angle = Math.atan2(this.dy, this.dx);
+            } else {
+                const angle = Math.atan2(closestPoint.y - this.y, closestPoint.x - this.x);
+                this.dx = Math.cos(angle);
+                this.dy = Math.sin(angle);
+                this.angle = Math.atan2(this.dy, this.dx);
+            }
         }
     }
 
