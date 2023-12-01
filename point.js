@@ -46,21 +46,25 @@ export class Point {
         if (this.x - halfSize < 0) {
             this.x = halfSize;
             this.dx *= -1;
+            this.speed = 0.1;
             this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
         }
         if (this.x + halfSize > this.canvas.width) {
             this.x = this.canvas.width - halfSize;
             this.dx *= -1;
+            this.speed = 0.1;
             this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
         }
         if (this.y - halfSize < 0) {
             this.y = halfSize;
             this.dy *= -1;
+            this.speed = 0.1;
             this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
         }
         if (this.y + halfSize > this.canvas.height) {
             this.y = this.canvas.height - halfSize;
             this.dy *= -1;
+            this.speed = 0.1;
             this.angle = Math.atan2(this.dy, this.dx); // Redefine o ângulo para refletir a nova direção
         }
 
@@ -129,9 +133,9 @@ export class Point {
         // Define o arco do cone de visão
         this.ctx.arc(0, 0, viewDistance, -viewAngle / 2 * Math.PI / 180, viewAngle / 2 * Math.PI / 180);
         
-        this.ctx.fillStyle = "rgba(0, 0, 255, 0.1)"; // Cor e transparência do cone de visão
+        this.ctx.strokeStyle = "rgba(0, 0, 0, 0.1)"; // Cor e transparência do cone de visão
         this.ctx.lineTo(0, 0); // Retorna ao ponto inicial para fechar o cone
-        this.ctx.fill();
+        this.ctx.stroke();
         
         this.ctx.restore();
     }

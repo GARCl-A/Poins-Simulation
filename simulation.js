@@ -114,7 +114,7 @@ export class PointSimulation {
     }
     
     getWinningTeam() {
-        const livingTeams = this.teams.filter(team => team.stoppedCount < team.getTeamSize());
+        const livingTeams = this.teams.filter(team => team.alive === false);
     
         if (livingTeams.length === 1) {
             return livingTeams[0];

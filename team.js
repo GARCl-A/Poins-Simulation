@@ -3,6 +3,7 @@ export class Team {
         this.teamId = teamId;
         this.points = [];
         this.stoppedCount = 0;
+        this.alive = true;
         const r = Math.random() * 255;
         const g = Math.random() * 255;
         const b = Math.random() * 255;
@@ -32,5 +33,8 @@ export class Team {
             }
         }); 
         this.stoppedCount = stoppeds;
+        if(this.stoppedCount == this.getTeamSize()){
+            this.alive = false;
+        }
     }
 }
