@@ -20,7 +20,7 @@ export class ScreenManager {
 
         // Event listener para o botão de reinício
         restartButton.addEventListener('click', () => {
-            this.simulation.reset(); // Método de reset na simulação
+            this.simulation.init(); // Método de reset na simulação
             this.overlay.style.display = 'none'; // Oculta o overlay novamente
         });
 
@@ -37,7 +37,6 @@ export class ScreenManager {
     }
 
     update() {
-        console.log(this.simulation.state)
         this.simulation.update();
         if(this.simulation.state == 'ended') {
             this.displayRestartButton();

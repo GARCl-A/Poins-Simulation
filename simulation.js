@@ -20,6 +20,7 @@ export class PointSimulation {
     init() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+        this.reset();
         this.state = 'simulating';
     
         for (let j = 0; j < this.teamNumber; j++) { // Corrigindo o laço for
@@ -127,7 +128,5 @@ export class PointSimulation {
         this.points = [];
         const aliveCountsElement = document.getElementById('aliveCounts');
         aliveCountsElement.innerHTML = ''; // Remove todos os elementos filhos
-        this.state = 'created'
-        this.init(); // Reinicia a simulação
     }
 }
