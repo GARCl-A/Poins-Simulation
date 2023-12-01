@@ -15,6 +15,8 @@ export class PointSimulation {
         this.points = [];
         this.state = 'created';
 
+        this.formations = new Formations(canvasId);
+
         this.init();
     }
 
@@ -44,6 +46,11 @@ export class PointSimulation {
                 team.addPoint(point);
                 this.points.push(point);
             }
+            const position ={
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+            }
+            this.formations.getBlockFormation(team, position)
         }
         this.update()
     }
