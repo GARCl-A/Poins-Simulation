@@ -84,12 +84,15 @@ export class Point {
     }
 
     getClosestPoint(points) {
+        const coneAngle = 60 * (Math.PI / 180); // Ângulo do cone em radianos (120 graus convertidos para radianos)
+  
         const visiblePoints = points.filter(otherPoint => 
             otherPoint !== this &&
             !otherPoint.stopped &&
+            this.team.teamId !== otherPoint.team.teamId &&
             this.getDistance(otherPoint) < this.viewDistance &&
-            this.team.teamId !== otherPoint.team.teamId
-            );
+            Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle / 2
+        );
       
         if (visiblePoints.length > 0) {
             let closestDistance = this.getDistance(visiblePoints[0]);
@@ -111,11 +114,26 @@ export class Point {
         }
     }
 
-    drawView(){
+    drawView() {
+        const halfSize = this.size / 2;
+        const viewAngle = 120; // Ângulo de visão do cone em graus
+        const viewDistance = this.viewDistance;
+    
+        this.ctx.save();
+        this.ctx.translate(this.x, this.y);
+        this.ctx.rotate(this.angle); // Roda o contexto para a direção do ponto
+    
         this.ctx.beginPath();
-        this.ctx.arc(this.x, this.y, this.viewDistance, 0, Math.PI * 2);
-        this.ctx.strokeStyle = "rgba(0, 0, 255, 0.05)";
-        this.ctx.stroke();
+        this.ctx.moveTo(0, 0); // Posição inicial no ponto central
+        
+        // Define o arco do cone de visão
+        this.ctx.arc(0, 0, viewDistance, -viewAngle / 2 * Math.PI / 180, viewAngle / 2 * Math.PI / 180);
+        
+        this.ctx.fillStyle = "rgba(0, 0, 255, 0.1)"; // Cor e transparência do cone de visão
+        this.ctx.lineTo(0, 0); // Retorna ao ponto inicial para fechar o cone
+        this.ctx.fill();
+        
+        this.ctx.restore();
     }
     
     drawSelf() {

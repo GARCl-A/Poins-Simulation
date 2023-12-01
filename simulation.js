@@ -1,5 +1,6 @@
 import { Point } from "./point.js";
 import { Team} from "./team.js"
+import { Formations } from "./formations.js"
 
 export class PointSimulation {
     constructor(canvasId, teamNumber, teamSize, speed, viewDistance, size) {
@@ -129,4 +130,5 @@ export class PointSimulation {
         const aliveCountsElement = document.getElementById('aliveCounts');
         aliveCountsElement.innerHTML = ''; // Remove todos os elementos filhos
     }
+
 }
