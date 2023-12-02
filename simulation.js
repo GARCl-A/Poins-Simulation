@@ -61,14 +61,20 @@ export class PointSimulation {
 
     update() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.drawChessboardBackground()
-
-        this.teams.forEach(team => {
-            team.update(this.points);
+        this.drawChessboardBackground();
+    
+        let start = Date.now();
+        this.teams.forEach((team, index) => {
+            const otherTeamsPoints = this.teams.filter((_, i) => i !== index).flatMap(team => team.points);
+            team.update(otherTeamsPoints);
         });
-
+        let end = Date.now();
+        if(end-start > 15){
+            console.log(end-start);
+        }
+    
         this.displayAliveCounts(); // Mostra a quantidade de cavaleiros vivos de cada time
-
+    
         this.checkIfTeamWon();
     }
 

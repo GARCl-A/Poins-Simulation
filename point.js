@@ -136,7 +136,7 @@ export class Point {
 
     checkCollision(points){
         points.forEach(otherPoint => {
-            if (otherPoint !== this && !otherPoint.stopped && otherPoint.team.teamId !== this.team.teamId) {
+            if (!otherPoint.stopped) {
                 const distance = this.getDistance(otherPoint);
                 if (distance < this.size) {
                     this.collide(otherPoint);
@@ -149,9 +149,7 @@ export class Point {
         const coneAngle = 60 * (Math.PI / 180); // Ângulo do cone em radianos (120 graus convertidos para radianos)
   
         const visiblePoints = points.filter(otherPoint => 
-            otherPoint !== this &&
             !otherPoint.stopped &&
-            this.team.teamId !== otherPoint.team.teamId &&
             this.getDistance(otherPoint) < this.viewDistance &&
             Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle
         );
