@@ -11,16 +11,20 @@ export class Quadtree {
 
     insert(point) {
         if (!this.boundary.contains(point)) {
-            return;
+            return; // Se o ponto não está na área da quadtree atual, não faz nada
         }
-
+    
         if (this.points.length < this.capacity) {
-            this.points.push(point);
+            this.points.push(point); // Adiciona o ponto se ainda houver espaço
         } else {
             if (!this.divided) {
-                this.subdivide();
+                this.subdivide(); // Divide a quadtree se ainda não estiver dividida
             }
-            this.children.forEach(child => child.insert(point));
+    
+            // Insere o ponto somente na quadtree filho correspondente à sua área
+            for (const child of this.children) {
+                child.insert(point);
+            }
         }
     }
 
@@ -77,7 +81,9 @@ export class Quadtree {
         }
 
         if (this.divided) {
-            this.children.forEach(child => child.remove(point));
+            for (const child of this.children) {
+                child.remove(point);
+            }
         }
     }
 }
