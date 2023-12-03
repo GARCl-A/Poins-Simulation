@@ -152,13 +152,14 @@ export class Point {
         let closestPoint = null;
     
         for (const otherPoint of points) {
+            let otherPointDistance = this.getDistance(otherPoint);
             if (!otherPoint.stopped &&
-                this.getDistance(otherPoint) < this.viewDistance &&
+                otherPointDistance < this.viewDistance &&
                 Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle) {
     
-                const distance = this.getDistance(otherPoint);
+                const distance = otherPointDistance;
                 if (distance < closestDistance) {
-                    closestDistance = distance;
+                    closestDistance = otherPointDistance;
                     closestPoint = otherPoint;
                 }
             }
