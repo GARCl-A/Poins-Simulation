@@ -78,6 +78,28 @@ export class PointSimulation {
         this.checkIfTeamWon();
     }
 
+    // uptade test do get mean elapsed time after 300 firts iteractions
+    // update() {
+    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    //     this.drawChessboardBackground();
+        
+    //     let start = Date.now();
+    //     this.teams.forEach((team, index) => {
+    //         const otherTeamsPoints = this.teams.filter((_, i) => i !== index).flatMap(team => team.points);
+    //         team.update(otherTeamsPoints);
+    //     });
+    //     let end = Date.now();
+    //     this.elapsedTime += end-start;
+    //     this.iterations++;
+    //     if(this.iterations === 300){
+    //         console.log(this.elapsedTime/300);
+    //     }
+    
+    //     this.displayAliveCounts(); // Mostra a quantidade de cavaleiros vivos de cada time
+    
+    //     this.checkIfTeamWon();
+    // }
+
     checkIfTeamWon() {
         // Verifica se apenas uma equipe está viva
         let aliveTeamsCount = 0;

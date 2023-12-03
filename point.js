@@ -146,37 +146,35 @@ export class Point {
     }
 
     getClosestPoint(points) {
-        const coneAngle = 60 * (Math.PI / 180); // Ângulo do cone em radianos (120 graus convertidos para radianos)
-  
-        const visiblePoints = points.filter(otherPoint => 
-            !otherPoint.stopped &&
-            this.getDistance(otherPoint) < this.viewDistance &&
-            Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle
-        );
-      
-        if (visiblePoints.length > 0) {
-            let closestDistance = this.getDistance(visiblePoints[0]);
-            let closestPoint = visiblePoints[0];
-
-            visiblePoints.forEach(point => {
-                const distance = this.getDistance(point);
+        const coneAngle = 60 * (Math.PI / 180);
+    
+        let closestDistance = Infinity;
+        let closestPoint = null;
+    
+        for (const otherPoint of points) {
+            if (!otherPoint.stopped &&
+                this.getDistance(otherPoint) < this.viewDistance &&
+                Math.abs(Math.atan2(otherPoint.y - this.y, otherPoint.x - this.x) - this.angle) < coneAngle) {
+    
+                const distance = this.getDistance(otherPoint);
                 if (distance < closestDistance) {
                     closestDistance = distance;
-                    closestPoint = point;
+                    closestPoint = otherPoint;
                 }
-            });
-
-            if (this.hp < 1 && closestPoint.speed > this.speed && closestPoint.hp > 1) { // Verifica se a vida do personagem está baixa e o ponto mais próximo não
+            }
+        }
+    
+        if (closestPoint) {
+            if (this.hp < 1 && closestPoint.speed > this.speed && closestPoint.hp > 1) {
                 const angleAway = Math.atan2(this.y - closestPoint.y, this.x - closestPoint.x);
                 this.dx = Math.cos(angleAway);
                 this.dy = Math.sin(angleAway);
-                this.angle = Math.atan2(this.dy, this.dx);
             } else {
                 const angle = Math.atan2(closestPoint.y - this.y, closestPoint.x - this.x);
                 this.dx = Math.cos(angle);
                 this.dy = Math.sin(angle);
-                this.angle = Math.atan2(this.dy, this.dx);
             }
+            this.angle = Math.atan2(this.dy, this.dx);
         }
     }
 
