@@ -31,7 +31,7 @@ export class Point {
             this.move();
             this.checkCollision(points);
             this.getClosestPoint(points);
-            //this.drawView();
+            this.drawView();
             this.drawInfo();
             this.drawSelf();
         }
@@ -183,9 +183,7 @@ export class Point {
     }
 
     drawView() {
-        const halfSize = this.size / 2;
         const viewAngle = 120; // Ângulo de visão do cone em graus
-        const viewDistance = this.viewDistance;
     
         this.ctx.save();
         this.ctx.translate(this.x, this.y);
@@ -195,7 +193,7 @@ export class Point {
         this.ctx.moveTo(0, 0); // Posição inicial no ponto central
         
         // Define o arco do cone de visão
-        this.ctx.arc(0, 0, viewDistance, -viewAngle / 2 * Math.PI / 180, viewAngle / 2 * Math.PI / 180);
+        this.ctx.arc(0, 0, this.viewDistance, -viewAngle / 2 * Math.PI / 180, viewAngle / 2 * Math.PI / 180);
         
         this.ctx.strokeStyle = "rgba(0, 0, 0, 0.1)"; // Cor e transparência do cone de visão
         this.ctx.lineTo(0, 0); // Retorna ao ponto inicial para fechar o cone
