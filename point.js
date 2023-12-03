@@ -31,7 +31,7 @@ export class Point {
             this.move();
             this.checkCollision(points);
             this.getClosestPoint(points);
-            this.drawView();
+            //this.drawView();
             this.drawInfo();
             this.drawSelf();
         }
@@ -133,7 +133,7 @@ export class Point {
     getDistance(point) {
         return Math.sqrt((this.x - point.x) ** 2 + (this.y - point.y) ** 2);
     }
-
+  
     checkCollision(points){
         points.forEach(otherPoint => {
             if (!otherPoint.stopped) {
@@ -161,6 +161,9 @@ export class Point {
                 if (distance < closestDistance) {
                     closestDistance = otherPointDistance;
                     closestPoint = otherPoint;
+                    if(distance < this.size * 1.5){
+                        break; //It's probabilly a collision, so we dont need to check other points.
+                    }
                 }
             }
         }
