@@ -31,7 +31,6 @@ export class Point {
             this.move();
             this.checkCollision(points);
             this.getClosestPoint(points);
-            this.drawView();
             this.drawInfo();
             this.drawSelf();
         }
@@ -183,23 +182,24 @@ export class Point {
     }
 
     drawView() {
-        const viewAngle = 120; // Ângulo de visão do cone em graus
-    
-        this.ctx.save();
-        this.ctx.translate(this.x, this.y);
-        this.ctx.rotate(this.angle); // Roda o contexto para a direção do ponto
-    
-        this.ctx.beginPath();
-        this.ctx.moveTo(0, 0); // Posição inicial no ponto central
-        
+        const viewAngle = 120;
+
         // Define o arco do cone de visão
-        this.ctx.arc(0, 0, this.viewDistance, -viewAngle / 2 * Math.PI / 180, viewAngle / 2 * Math.PI / 180);
-        
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, this.viewDistance, (-viewAngle / 2 + 90) * Math.PI / 180, (viewAngle / 2 + 90) * Math.PI / 180);
         this.ctx.strokeStyle = "rgba(0, 0, 0, 0.1)"; // Cor e transparência do cone de visão
-        this.ctx.lineTo(0, 0); // Retorna ao ponto inicial para fechar o cone
         this.ctx.stroke();
-        
-        this.ctx.restore();
+    }
+
+    drawTeamBaseColor(halfSize){
+        // Aplica uma cor sobre a imagem sem substituir completamente a cor original
+        this.ctx.globalCompositeOperation = 'color'; // Define a operação de composição como 'color blending'
+        this.ctx.fillStyle = this.team.color; // Cor da máscara
+        this.ctx.globalAlpha = 0.2; // Ajusta o valor alpha para controlar a transparência da cor (variando de 0 a 1)
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, halfSize, 0, Math.PI * 2); // Desenha um círculo
+        this.ctx.closePath();
+        this.ctx.fill();
     }
     
     drawSelf() {
@@ -213,24 +213,21 @@ export class Point {
         // Translada e rotaciona o contexto para desenhar a imagem
         this.ctx.translate(this.x, this.y);
         this.ctx.rotate(angle - Math.PI / 2);
+
+        this.drawView();
         
         // Desenha a imagem original do personagem
         this.ctx.drawImage(this.characterImage, -halfSize, -halfSize, this.size, this.size);
         
-        // Aplica uma cor sobre a imagem sem substituir completamente a cor original
-        this.ctx.globalCompositeOperation = 'color'; // Define a operação de composição como 'color blending'
-        this.ctx.fillStyle = this.team.color; // Cor da máscara
-        this.ctx.globalAlpha = 0.2; // Ajusta o valor alpha para controlar a transparência da cor (variando de 0 a 1)
-        this.ctx.beginPath();
-        this.ctx.arc(0, 0, halfSize, 0, Math.PI * 2); // Desenha um círculo
-        this.ctx.closePath();
-        this.ctx.fill();
-
+        this.drawTeamBaseColor(halfSize);
+        
         // Restaura o estado anterior do contexto
         this.ctx.globalCompositeOperation = 'source-over'; // Retorna à operação de composição padrão
         this.ctx.globalAlpha = 1; // Retorna ao valor alpha padrão
+        
         this.ctx.restore();
     }
+    
 
     collide(otherPoint){
         this.strike(otherPoint);
