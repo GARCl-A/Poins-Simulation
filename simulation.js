@@ -36,7 +36,7 @@ export class PointSimulation {
             // Criar elementos HTML para exibir os contadores de equipes
             const teamCountElement = document.createElement('div');
             teamCountElement.classList.add('team');
-            teamCountElement.id = `team${j + 1}`; // Usar j em vez de i
+            teamCountElement.id = `team${j + 1}`;
             teamCountElement.innerHTML = `<span id="team${j + 1}Count"></span>`;
             teamCountElement.style.backgroundColor = team.color;
             teamCountElement.style.color = 'white';
