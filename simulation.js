@@ -54,49 +54,29 @@ export class PointSimulation {
                 y: Math.random() * this.canvas.height,
             }
 
-            const formationKey = 1;//Math.ceil(Object.keys(this.formations.formationsMap).length * Math.random());
+            const formationKey = Math.ceil(Object.keys(this.formations.formationsMap).length * Math.random());
             const formationId = this.formations.formationsMap[formationKey];
             this.formations.getFormation(formationId, team);
         }
         this.update()
     }
-    
-
-    // update() {
-    //     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    //     this.drawChessboardBackground();
-    
-    //     // let start = Date.now();
-    //     this.teams.forEach((team, index) => {
-    //         const otherTeamsPoints = this.teams.filter((_, i) => i !== index).flatMap(team => team.points);
-    //         team.update(otherTeamsPoints);
-    //     });
-    //     let end = Date.now();
-    //     // if(end-start > 15){
-    //     //     console.log(end-start);
-    //     // }
-    
-    //     this.displayAliveCounts(); // Mostra a quantidade de cavaleiros vivos de cada time
-    
-    //     this.checkIfTeamWon();
-    // }
 
     //update test do get mean elapsed time after 300 firts iteractions
     update() {
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawChessboardBackground();
         
-        let start = Date.now();
+        // let start = Date.now();
         this.teams.forEach((team, index) => {
             const otherTeamsPoints = this.teams.filter((_, i) => i !== index).flatMap(team => team.points);
             team.update(otherTeamsPoints);
         });
-        let end = Date.now();
-        this.elapsedTime += end-start;
-        this.iterations++;
-        if(this.iterations === 300){
-            console.log(this.elapsedTime/300);
-        }
+        // let end = Date.now();
+        // this.elapsedTime += end-start;
+        // this.iterations++;
+        // if(this.iterations === 300){
+        //     console.log(this.elapsedTime/300);
+        // }
     
         this.displayAliveCounts(); // Mostra a quantidade de cavaleiros vivos de cada time
     
