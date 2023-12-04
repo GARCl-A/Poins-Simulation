@@ -24,6 +24,7 @@ export class Quadtree {
             // Insere o ponto somente na quadtree filho correspondente à sua área
             for (const child of this.children) {
                 child.insert(point);
+                point.actualQuadtree = this;
             }
         }
     }
@@ -63,7 +64,9 @@ export class Quadtree {
         }
 
         if (this.divided) {
-            this.children.forEach(child => found.concat(child.query(range, found)));
+            for (const child of this.children) {
+                found.concat(child.query(range, found));
+            }
         }
 
         return found;
