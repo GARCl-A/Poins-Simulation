@@ -1,9 +1,9 @@
-import { Boundary } from "./boundary.js";
+import { Team } from "./team.js"
 
 const cone120 =  60 * (Math.PI / 180); // Ângulo do cone em radianos (120 graus convertidos para radianos)
 
 export class Point {
-    constructor(canvas, simulation, speed, viewDistance, size, team, name, quadtreeRoot) {
+    constructor(canvas, simulation, speed, viewDistance, size, team, name) {
         this.name = name;
         this.canvas = canvas;
         this.ctx = canvas.getContext("2d");
@@ -16,8 +16,6 @@ export class Point {
         this.team = team;
         this.hp = 3;
         this.wallsCD = 0;
-        this.actualQuadtree = quadtreeRoot;
-        this.quadtreeRoot = quadtreeRoot;
 
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
@@ -92,8 +90,6 @@ export class Point {
         this.y += this.dy * this.speed;
 
         this.speed += 0.01; // Aumenta a velocidade gradualmente
-        this.actualQuadtree.remove(this);
-        this.quadtreeRoot.insert(this); 
     }
     
     checkWallCollision(halfSize) {
@@ -149,23 +145,9 @@ export class Point {
         return Math.sqrt((this.x - point.x) ** 2 + (this.y - point.y) ** 2);
     }
   
-    // checkCollision(points){
-    //     points.forEach(otherPoint => {
-    //         if (!otherPoint.stopped) {
-    //             const distance = this.getDistance(otherPoint);
-    //             if (distance < this.size) {
-    //                 this.collide(otherPoint);
-    //             }
-    //         }
-    //     });
-    // }
-
-    checkCollision() {
-        const range = new Boundary(this.x - this.size, this.y - this.size, this.size * 2, this.size * 2);
-        const nearbyPoints = this.quadtreeRoot.query(range, []);
-    
-        nearbyPoints.forEach(otherPoint => {
-            if (otherPoint !== this && !otherPoint.stopped && otherPoint.team.teamId !== this.team.teamId) {
+    checkCollision(points){
+        points.forEach(otherPoint => {
+            if (!otherPoint.stopped) {
                 const distance = this.getDistance(otherPoint);
                 if (distance < this.size) {
                     this.collide(otherPoint);

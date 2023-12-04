@@ -1,8 +1,6 @@
 import { Point } from "./point.js";
 import { Team} from "./team.js"
 import { Formations } from "./formations.js"
-import { Quadtree } from "./quadTree.js";
-import { Boundary } from "./boundary.js";
 
 export class PointSimulation {
     constructor(canvasId, teamNumber, teamSize, speed, viewDistance, size) {
@@ -16,7 +14,6 @@ export class PointSimulation {
         this.teams = [];
         this.points = [];
         this.state = 'created';
-        this.quadtreeRoot = null;
 
         this.formations = new Formations(canvasId);
 
@@ -29,10 +26,6 @@ export class PointSimulation {
     init() {
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
-        this.quadtreeRoot = new Quadtree(
-            new Boundary(0,0,this.canvas.width, this.canvas.height),
-            Math.max(4,this.teamSize/64)
-        )
         this.reset();
         this.state = 'simulating';
     
@@ -52,10 +45,9 @@ export class PointSimulation {
     
             for (let i = 0; i < this.teamSize; i++) {
                 let pointName = `${j}-${i}`
-                const point = new Point(this.canvas, this, this.speed, this.viewDistance, this.size, team, pointName, this.quadtreeRoot);
+                const point = new Point(this.canvas, this, this.speed, this.viewDistance, this.size, team, pointName);
                 team.addPoint(point);
                 this.points.push(point);
-                this.quadtreeRoot.insert(point);
             }
             const position ={
                 x: Math.random() * this.canvas.width,
@@ -149,7 +141,7 @@ export class PointSimulation {
         } else if(livingTeams.length === 0){
             return new Team('Draw');
         }
-    } 
+    }
 
     reset() {
         // Reinicialize aqui todos os parâmetros necessários para começar uma nova simulação
