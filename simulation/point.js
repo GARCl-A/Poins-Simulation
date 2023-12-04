@@ -24,7 +24,7 @@ export class Point {
 
         this.angle = Math.atan2(this.dy, this.dx);
         this.characterImage = new Image();
-        this.characterImage.src = 'character.png';
+        this.characterImage.src = 'assets/character.png';
     }
 
     update(points) {

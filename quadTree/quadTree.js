@@ -1,4 +1,4 @@
-import { Boundary } from "./boundary.js"
+import { Boundary } from ".quadTree/boundary.js"
 
 export class Quadtree {
     constructor(boundary, capacity) {

@@ -1,4 +1,4 @@
-import { ScreenManager } from './screenManager.js';
+import { ScreenManager } from '../simulation/screenManager.js';
 
 // Definir a função startSimulation no escopo global
 window.startSimulation = function() {
