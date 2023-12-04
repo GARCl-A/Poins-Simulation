@@ -1,5 +1,3 @@
-import { Team } from "./team.js"
-
 const cone120 =  60 * (Math.PI / 180); // Ângulo do cone em radianos (120 graus convertidos para radianos)
 
 export class Point {
